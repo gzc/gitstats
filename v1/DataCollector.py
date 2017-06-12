@@ -27,7 +27,6 @@ Date:   Thu Apr 27 00:16:12 2017 +0530   (3)
 """
 
 def fire(logname):
-    totalCommit = 0
     commits = []
     state = 0
     count = 0
@@ -43,6 +42,9 @@ def fire(logname):
     commitLinesAdded = 0
     commitLinesDeleted = 0
 
+    filesAdded = 0
+    filesDeleted = 0
+
     myfile = open(logname)
     lines = myfile.readlines()
 
@@ -52,7 +54,6 @@ def fire(logname):
         if state == 0:
             # Parsing commit hash
             assert len(line) == 48 and line.startswith('commit'), "When parsing commit hash, the state should be 0"
-            totalCommit = totalCommit + 1
             commitHash = line[7:-2]
             state = 1
         elif state == 1:
@@ -79,16 +80,27 @@ def fire(logname):
                 commitLinesAdded, commitLinesDeleted = Util.ParseSummaryInCommit(line)
                 state = 7
         elif state == 7:
-            if len(line.strip()) == 0:
+            line = line.strip()
+            if len(line) == 0:
                 # end
                 currentCommit = Commit(commitHash, commitAuthor, commitAuthorEmail, commitDate, commitMessage)
                 currentCommit.linesAdded = commitLinesAdded
                 currentCommit.linesDeleted = commitLinesDeleted
+                currentCommit.filesAdded = filesAdded
+                currentCommit.filesDeleted = filesDeleted
                 commits.append(currentCommit)
+                # clear state
                 state = 0
+                filesAdded = 0
+                filesDeleted = 0
             else:
-                # TODO: collect create/delete mode data
-                continue
+                if line.startswith('create'):
+                    filesAdded = filesAdded + 1
+                elif line.startswith('delete'):
+                    filesDeleted = filesDeleted + 1
+                else:
+                    # TODO : this is rename file
+                    pass
 
     myfile.close()
     return commits
