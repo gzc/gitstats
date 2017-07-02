@@ -8,6 +8,7 @@ go.sh
 # Do not ignore template file
 !index_template.html
 !by_date_template.html
+!best_authors_template.html
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

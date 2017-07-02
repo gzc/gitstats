@@ -8,3 +8,6 @@ LINES_BY_DATE = 'web/lines/by_date.html'
 # x-axis: time; y-axis: total files in your repo
 FILES_BY_DATE_TEMPLATE = 'web/files/by_date_template.html'
 FILES_BY_DATE = 'web/files/by_date.html'
+
+BEST_AUTHORS_TEMPLATE = 'web/authors/best_authors_template.html'
+BEST_AUTHORS = 'web/authors/best_authors.html'

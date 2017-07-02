@@ -3,8 +3,11 @@ import time
 from Commit import Commit;
 import Constant;
 import collections
+from yattag import Doc
 
-def generateHTML(commits, projectName, totalAuthors):
+def generateHTML(commits, projectName, commitData):
+    totalAuthors = len(commitData)
+    generateBestAuthors(commitData)
     totalLines, totalLinesAdded, totalLinesDeleted = generateLinesByDate(commits, projectName)
     totalFiles = generateFilesByDate(commits, projectName)
     generateIndexHtml(projectName, totalLines, totalLinesAdded, totalLinesDeleted,
@@ -31,6 +34,28 @@ def generateIndexHtml(projectName, totalLines, totalLinesAdded, totalLinesDelete
                     fout.write(line.replace('$linesdeleted', str(totalLinesDeleted)))
                 elif '$author' in line:
                     fout.write(line.replace('$author', str(totalAuthors)))
+                else:
+                    fout.write(line)
+
+def generateBestAuthors(commitData):
+    # Generate best author table
+    fields = ['author', 'commit_number', 'lines_added', 'lines_deleted']
+    doc, tag, text = Doc().tagtext()
+    with tag('table', ('class', 'table table-bordered table-condensed table-hover')):
+        with tag('tr'):
+            for i in range(len(fields)):
+                with tag('th'):
+                    text(fields[i])
+        for commitdata in commitData:
+            with tag('tr'):
+                for i in range(len(fields)):
+                    with tag('td', ('align', 'center')):
+                        text(commitdata[i])
+    with open(Constant.BEST_AUTHORS_TEMPLATE, "rt") as fin:
+        with open(Constant.BEST_AUTHORS, "wt") as fout:
+            for line in fin:
+                if '$data' in line:
+                    fout.write(line.replace('$data', doc.getvalue()))
                 else:
                     fout.write(line)
 
