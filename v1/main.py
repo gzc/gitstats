@@ -32,7 +32,7 @@ def main():
     DataDriver.generateHTML(commits, projectName, commitData, fileExtensionMap)
 
     # Motivation data
-    MotivationDataDriver.generateHTML(commits)
+    MotivationDataDriver.generateHTML(projectName, commits)
 
 if __name__ == "__main__":
     main()

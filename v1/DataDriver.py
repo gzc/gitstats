@@ -8,8 +8,8 @@ from yattag import Doc
 
 def generateHTML(commits, projectName, commitData, fileExtensionMap):
     totalAuthors = len(commitData)
-    generateBestAuthors(commitData)
-    generateFileByExtension(fileExtensionMap)
+    generateBestAuthors(projectName, commitData)
+    generateFileByExtension(fileExtensionMap, projectName)
     totalLines, totalLinesAdded, totalLinesDeleted = generateLinesByDate(commits, projectName)
     totalFiles = generateFilesByDate(commits, projectName)
     generateIndexHtml(projectName, totalLines, totalLinesAdded, totalLinesDeleted,
@@ -39,7 +39,7 @@ def generateIndexHtml(projectName, totalLines, totalLinesAdded, totalLinesDelete
                 else:
                     fout.write(line)
 
-def generateBestAuthors(commitData):
+def generateBestAuthors(projectName, commitData):
     # Generate best author table
     fields = ['author', 'commit_number', 'lines_added', 'lines_deleted']
     doc, tag, text = Doc().tagtext()
@@ -56,7 +56,9 @@ def generateBestAuthors(commitData):
     with open(Constant.BEST_AUTHORS_TEMPLATE, "rt") as fin:
         with open(Constant.BEST_AUTHORS, "wt") as fout:
             for line in fin:
-                if '$data' in line:
+                if '$title' in line:
+                    fout.write(line.replace('$title', projectName))
+                elif '$data' in line:
                     fout.write(line.replace('$data', doc.getvalue()))
                 else:
                     fout.write(line)
@@ -115,7 +117,7 @@ def generateFilesByDate(commits, projectName):
                     fout.write(line)
     return totalFiles
 
-def generateFileByExtension(fileExtensionMap):
+def generateFileByExtension(fileExtensionMap, projectName):
     exts = fileExtensionMap.keys()
     data = fileExtensionMap.values()
     totalFiles = sum(data)
@@ -129,7 +131,9 @@ def generateFileByExtension(fileExtensionMap):
     with open(Constant.FILES_BY_EXTENSION_TEMPLATE, "rt") as fin:
         with open(Constant.FILES_BY_EXTENSION, "wt") as fout:
             for line in fin:
-                if '$data' in line:
+                if '$title' in line:
+                    fout.write(line.replace('$title', projectName))
+                elif '$data' in line:
                     fout.write(line.replace('$data', '[' + ','.join(str(e) for e in fileExtensionMap.values()) + ']' ))
                 elif '$extensions' in line:
                     fout.write(line.replace('$extensions', json.dumps(fileExtensionMap.keys())))

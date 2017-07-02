@@ -7,7 +7,7 @@ import Constant;
 import pandas as pd
 from yattag import Doc
 
-def generateHTML(commits):
+def generateHTML(projectName, commits):
     fields = ['author', 'commit_number', 'date']
     r = map(lambda commit : (commit.author, 1, str(commit.date.year) + '-' + paddingMonth(commit.date.month)), commits)
     df = pd.DataFrame(data=r, columns=fields) \
@@ -41,7 +41,9 @@ def generateHTML(commits):
     with open(Constant.RANK_TEMPLATE, "rt") as fin:
         with open(Constant.RANK, "wt") as fout:
             for line in fin:
-                if '$data' in line:
+                if '$title' in line:
+                    fout.write(line.replace('$title', projectName))
+                elif '$data' in line:
                     fout.write(line.replace('$data', doc.getvalue()))
                 else:
                     fout.write(line)
