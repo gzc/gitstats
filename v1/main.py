@@ -15,8 +15,8 @@ import DataDriver
 import Util
 
 def main():
-    logname = sys.argv[1]
-    projectName = 'BBG'
+    projectName = sys.argv[1]
+    logname = sys.argv[2]
     fields = ['author', 'commit_number', 'lines_added', 'lines_deleted']
     commits, fileExtensionMap = DataCollector.fire(logname)
 
