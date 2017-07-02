@@ -7,3 +7,7 @@
 07/01/2017
 1. Using template html
 2. Support file by extension
+
+## V 1.0.1-alpha
+07/02/2017
+1. Support ranking by month

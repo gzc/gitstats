@@ -10,6 +10,7 @@ go.sh
 !by_date_template.html
 !best_authors_template.html
 !by_extension_template.html
+!rank_template.html
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

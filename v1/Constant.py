@@ -13,3 +13,5 @@ FILES_BY_EXTENSION = 'web/files/by_extension.html'
 
 BEST_AUTHORS_TEMPLATE = 'web/authors/best_authors_template.html'
 BEST_AUTHORS = 'web/authors/best_authors.html'
+RANK_TEMPLATE = 'web/authors/rank_template.html'
+RANK = 'web/authors/rank.html'

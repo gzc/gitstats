@@ -12,6 +12,7 @@ from Commit import Commit
 import Constant
 import DataCollector
 import DataDriver
+import MotivationDataDriver
 import Util
 
 def main():
@@ -29,6 +30,9 @@ def main():
 
     # Generate html from template html and insert data
     DataDriver.generateHTML(commits, projectName, commitData, fileExtensionMap)
+
+    # Motivation data
+    MotivationDataDriver.generateHTML(commits)
 
 if __name__ == "__main__":
     main()
