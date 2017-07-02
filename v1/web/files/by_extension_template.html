@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>gitstats - $title</title>
+    <title>GitStats - devise</title>
     <meta charset='utf-8'>
     <link href='../assets/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
     <style>
@@ -21,20 +21,23 @@
             <span class='icon-bar'></span>
             <span class='icon-bar'></span>
           </a>
-          <a class='brand' href='../index.html'>gitstats - $title</a>
+          <a class='brand' href='../index.html'>GitStats - devise</a>
           <div class='nav-collapse collapse'>
             <ul class='nav'>
               <li class=''>
                 <a href='../index.html'>General</a>
               </li>
               <li class=''>
-                <a href='../authors/best_authors.html'>Authors</a>
+                <a href='../activity/by_date.html'>Activity</a>
               </li>
               <li class=''>
-                <a href='../files/by_date.html'>Files</a>
+                <a href='../authors/best_authors.html'>Authors</a>
               </li>
               <li class='active'>
-                <a href='by_date.html'>Lines</a>
+                <a href='by_date.html'>Files</a>
+              </li>
+              <li class=''>
+                <a href='../lines/by_date.html'>Lines</a>
               </li>
             </ul>
           </div>
@@ -44,28 +47,32 @@
     <div class='container'>
       <div class='tabbable tabs-left'>
         <ul class='nav nav-tabs'>
+          <li class=''>
+            <a href='by_date.html'>Files by date</a>
+          </li>
           <li class='active'>
-            <a href='by_date.html'>Lines by date</a>
+            <a href='by_extension.html'>Files by extension</a>
           </li>
         </ul>
         <div class='tab-content'>
           <div class='tab-pane active'>
             <div class='page-header'>
-              <h1 class='pagination-centered'>Lines by date</h1>
+              <h1 class='pagination-centered'>Files by extension</h1>
             </div>
                     <script type="text/javascript">
                     (function() {
                       var onload = window.onload;
                       window.onload = function(){
                         if (typeof onload == "function") onload();
-                                var options = { "title": { "text": "" },"legend": { "enabled": false },"xAxis": { "title": { "text": null } },"yAxis": { "title": { "text": "Lines" },"labels": {  } },"tooltip": { "enabled": true },"credits": { "enabled": false },"plotOptions": { "areaspline": {  } },"chart": { "defaultSeriesType": "line","renderTo": "lines_by_date" },"subtitle": {  },"series": [{ "name": "Lines by date","type": "spline","data": $data }] };
+                                var options = { "title": { "text": "" },"legend": { "enabled": false },"xAxis": { "title": { "text": null },"categories": $extensions },"yAxis": { "title": { "text": "Files" },"labels": {  } },"tooltip": { "enabled": true },"credits": { "enabled": false },"plotOptions": { "areaspline": {  } },"chart": { "defaultSeriesType": "line","renderTo": "files_by_extension","type": "column" },"subtitle": {  },"series": [{ "name": "Files by extension","data":
+                                $data }] };
 
-                    window.chart_lines_by_date = new Highcharts.StockChart(options);
+                    window.chart_files_by_extension = new Highcharts.Chart(options);
 
                       };
                     })()
                     </script>
-            <div id="lines_by_date"></div>
+            <div id="files_by_extension"></div>
           </div>
         </div>
       </div>

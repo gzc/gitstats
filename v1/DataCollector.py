@@ -48,6 +48,9 @@ def fire(logname):
     myfile = open(logname)
     lines = myfile.readlines()
 
+    # store file extention information
+    fileExtentionMap = {}
+
     while count < len(lines):
         line = lines[count]
         count = count + 1
@@ -95,12 +98,42 @@ def fire(logname):
                 filesDeleted = 0
             else:
                 if line.startswith('create'):
+                    dotIdx = line.rfind('.');
+                    ext = line[dotIdx+1:]
+                    if ext not in fileExtentionMap.keys():
+                        fileExtentionMap[ext] = 0
+                    fileExtentionMap[ext] += 1
                     filesAdded = filesAdded + 1
                 elif line.startswith('delete'):
+                    dotIdx = line.rfind('.');
+                    ext = line[dotIdx+1:]
+                    if ext not in fileExtentionMap.keys():
+                        fileExtentionMap[ext] = 0
+                    fileExtentionMap[ext] -= 1
                     filesDeleted = filesDeleted + 1
                 else:
                     # TODO : this is rename file
-                    pass
+                    # 1  rename webpack.config.js => webpack.config.local.js (71%)
+                    # 2. rename client/{ => a/b}/Sports/CurrentGame.tsx (65%)
+	                # 3. rename client/reducers/{reservation => }/selected.js (67%)
+                    # 4. rename test/{utils => testUtils}/Helpers.ts (100%)
+                    # 5. rename client/actions/{scheduler.js => scheduler.ts} (51%)
+                    braceL = line.find('{')
+                    braceR = line.find('}')
+                    if braceL < 0:
+                        # case 1
+                        Util.handleRenameFile(line, fileExtentionMap)
+                    else:
+                        arrowIdx = line.find('=>')
+                        fileL = line[braceL+1:arrowIdx-1]
+                        fileR = line[arrowIdx+3:braceR]
+                        if fileL < 2 or fileR < 2:
+                            # case 2 & 3
+                            continue
+                        if line[braceR+1] == '/':
+                            # case 4
+                            continue
+                        Util.handleRenameFile(line[braceL+1:braceR], fileExtentionMap)
 
     myfile.close()
-    return commits
+    return commits, fileExtentionMap

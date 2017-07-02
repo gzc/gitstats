@@ -1,13 +1,15 @@
 from datetime import datetime
 import time
+import json
 from Commit import Commit;
 import Constant;
 import collections
 from yattag import Doc
 
-def generateHTML(commits, projectName, commitData):
+def generateHTML(commits, projectName, commitData, fileExtensionMap):
     totalAuthors = len(commitData)
     generateBestAuthors(commitData)
+    generateFileByExtension(fileExtensionMap)
     totalLines, totalLinesAdded, totalLinesDeleted = generateLinesByDate(commits, projectName)
     totalFiles = generateFilesByDate(commits, projectName)
     generateIndexHtml(projectName, totalLines, totalLinesAdded, totalLinesDeleted,
@@ -112,3 +114,24 @@ def generateFilesByDate(commits, projectName):
                 else:
                     fout.write(line)
     return totalFiles
+
+def generateFileByExtension(fileExtensionMap):
+    exts = fileExtensionMap.keys()
+    data = fileExtensionMap.values()
+    totalFiles = sum(data)
+    threshold = int(totalFiles/200)
+    for ext in fileExtensionMap.keys():
+        if fileExtensionMap[ext] <= threshold:
+            if 'other' not in fileExtensionMap:
+                fileExtensionMap['other'] = 0
+            fileExtensionMap['other'] += fileExtensionMap[ext]
+            del fileExtensionMap[ext]
+    with open(Constant.FILES_BY_EXTENSION_TEMPLATE, "rt") as fin:
+        with open(Constant.FILES_BY_EXTENSION, "wt") as fout:
+            for line in fin:
+                if '$data' in line:
+                    fout.write(line.replace('$data', '[' + ','.join(str(e) for e in fileExtensionMap.values()) + ']' ))
+                elif '$extensions' in line:
+                    fout.write(line.replace('$extensions', json.dumps(fileExtensionMap.keys())))
+                else:
+                    fout.write(line)

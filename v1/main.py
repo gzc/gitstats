@@ -18,7 +18,7 @@ def main():
     logname = sys.argv[1]
     projectName = 'BBG'
     fields = ['author', 'commit_number', 'lines_added', 'lines_deleted']
-    commits = DataCollector.fire(logname)
+    commits, fileExtensionMap = DataCollector.fire(logname)
 
     r1 = map(lambda commit : (commit.author, 1, commit.linesAdded, commit.linesDeleted), commits)
     df = pd.DataFrame(data=r1, columns=fields) \
@@ -28,7 +28,7 @@ def main():
     commitData = zip(df.index, *df.values.T) # df is the result above
 
     # Generate html from template html and insert data
-    DataDriver.generateHTML(commits, projectName, commitData)
+    DataDriver.generateHTML(commits, projectName, commitData, fileExtensionMap)
 
 if __name__ == "__main__":
     main()
