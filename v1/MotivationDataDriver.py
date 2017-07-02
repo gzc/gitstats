@@ -32,7 +32,7 @@ def generateHTML(commits):
                 text('Date (year-month)')
             with tag('th', ('align', 'center')):
                 text('Hero (commit number)')
-        for key, value in sorted(mydict.iteritems()):
+        for key, value in sorted(mydict.iteritems(), reverse=True):
             with tag('tr'):
                 with tag('td', ('align', 'center')):
                     text(key)
